@@ -10,6 +10,8 @@
   <link href="../bower_components/paper-item/paper-item.html" rel="import">
   <link href="../bower_components/paper-input/paper-input.html" rel="import">
   <link href="../bower_components/iron-icons/iron-icons.html" rel="import">
+  <link rel="import" href="../bower_components/pubnub-element/pubnub-element.html">
+
 </head>
 <dom-module id="todo-app">
   <style></style>
@@ -42,54 +44,89 @@
         </template>
       </div>
     </div>
+    <core-pubnub 
+        publish_key="" 
+        subscribe_key="">
+        <core-pubnub-publish id="pub" channel="todo" message="Test"> </core-pubnub-publish>
+        <core-pubnub-subscribe id="sub" channel="todo" messages="{{messages}}" presence="{{present}}" on-callback="subscribeCallback"></core-pubnub-subscribe>  
+    </core-pubnub>
   </template>
 </dom-module>
 <script>
   Polymer({
     is: "todo-app",
     properties: {
-        todo: {
-            type: Array,  // Default with one value
-            value: [{user:"Coder",task:"Learn Polymer",rid:0}]
-        },
-        done: {
-            type:Array,
-            value: []
-        },
+      todo: {
+        type: Array,  // Default with one value
+        value: [{user:"Coder",task:"Learn Polymer",rid:0}]
+      },
+      done: {
+        type:Array,
+        value: []
+      },
+      messages: {
+        type: Array,
+        value: []
+      },
+      present: {
+        type: Array,
+        value: []
+      }
     },
     postTask: function(e) {  // Add a new task
-        var tsk = this.$.tTask.value;
-        var usr = this.$.tUser.value;
-        if (tsk==""){
-            alert("Task is Empty!");
-            return;
-        }
-        if (usr==""){ 
-            usr = "Anonymous";
-        }
-        this.$.tTask.value = "";
-        //Will need to publish the task in Part 4
+      var tsk = this.$.tTask.value;
+      var usr = this.$.tUser.value;
+      if (tsk==""){
+          alert("Task is Empty!");
+          return;
+      }
+      if (usr==""){ 
+          usr = "Anonymous";
+      }
+      this.$.tTask.value = "";
+      this.$.pub.message = { type:"todo", task:tsk, user:usr, rid:randID() };
+      this.$.pub.publish();
     },
     handleComplete: function(e){
-        var idx = findWithAttr(this.todo, 'rid', e.target.rid);
-        var itm = this.todo[idx];
-        itm.task = e.target.task;       //Task of the fired event
-        itm.user = this.$.tUser.value; //User who completed task
-        itm.type = "done";              //Change to completed
-        // Will Publish completed item in Part 4
+      var idx = findWithAttr(this.todo, 'rid', e.target.rid);
+      var itm = this.todo[idx];
+      itm.task = e.target.task;       //Task of the fired event
+      itm.user = this.$.tUser.value; //User who completed task
+      itm.type = "done";              //Change to completed
+      this.$.pub.message = itm;
+      this.$.pub.publish();
     },
     ready: function(e){
         this.addEventListener('complete', this.handleComplete);
-    }
-});
-function randID(){  // RandID is just a large number, could be better.
-    return Math.floor(Math.random()*10000);
-}
-function findWithAttr(array, attr, value) { //Finds object index in array by its random ID
-    for(var i = 0; i < array.length; i += 1) {
-        if(array[i][attr] === value) {
-            return i;
+    },
+    subscribeCallback: function(e){
+      while(this.messages.length > 0){ // Get all messages
+        var item = this.messages.pop();
+        switch(item.type){
+          case "todo":
+          this.unshift('todo', {task:item.task, user:item.user, rid:item.rid});
+          break;
+          case "done":
+          var idx = findWithAttr(this.todo, 'rid',item.rid);
+          var itm = this.splice('todo', idx, 1)[0];
+          itm.task = item.task;
+          itm.user = item.user;
+          this.push('done',itm);
+          break;
+          default:
+          continue;
         }
+      }
     }
-}
+  });
+  function randID(){  // RandID is just a large number, could be better.
+      return Math.floor(Math.random()*10000);
+  }
+  function findWithAttr(array, attr, value) { //Finds object index in array by its random ID
+      for(var i = 0; i < array.length; i += 1) {
+          if(array[i][attr] === value) {
+              return i;
+          }
+      }
+  }
 </script>
