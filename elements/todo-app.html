@@ -10,24 +10,33 @@
   <link href="../bower_components/paper-item/paper-item.html" rel="import">
   <link href="../bower_components/paper-input/paper-input.html" rel="import">
   <link href="../bower_components/iron-icons/iron-icons.html" rel="import">
-  <link rel="import" href="../bower_components/pubnub-element/pubnub-element.html">
+  <link href="../bower_components/pubnub-element/pubnub-element.html" rel="import">
 
 </head>
 <dom-module id="todo-app">
-  <style></style>
+
+
   <template>
+    <paper-drawer-panel>
+      <paper-header-panel>
+        paper-item
+      </paper-header-panel>
+    </paper-drawer-panel>  
+
+
+
     <paper-menu class="list">
-    <template is="dom-if" if="{{!done.length}}">
-      <paper-material>
-      <paper-item>Completed tasks will appear here!</paper-item>
-    </paper-material>
-  </template>
-  <template id="done" is="dom-repeat" items="{{done}}">
-  <paper-item>{{item.task}}<i style="margin-left: 5px;">{{item.user}}</i></paper-item>
-  </template>
+      <template is="dom-if" if="{{!done.length}}">
+        <paper-material>
+          <paper-item>Completed tasks will appear here!</paper-item>
+        </paper-material>
+       </template> 
+      <template id="done" is="dom-repeat" items="{{done}}">
+        <paper-item>{{item.task}}<i style="margin-left: 5px;">{{item.user}}</i></paper-item>
+      </template>
     </paper-menu>
     <div style="border-left: 1px solid #ccc;">
-      <!-- To create a new Todo -->
+    <!-- To create a new Todo -->
       <paper-material id="todoEntry" elevation="2">
         <paper-input id="tTask" label="Task"></paper-input>
         <paper-input id="tUser" char-counter label="Username" maxlength="16"></paper-input> 
@@ -43,15 +52,18 @@
           <todo-element user="{{item.user}}" task="{{item.task}}" rid="{{item.rid}}"></todo-element>
         </template>
       </div>
-    </div>
+    </div>  
     <core-pubnub 
-        publish_key="" 
-        subscribe_key="">
+        publish_key="pub-c-28c6b849-a634-4bb8-9be9-f9d5d5bbb942" 
+        subscribe_key="sub-c-c49bf3ae-38b4-11e6-92e6-0619f8945a4f">
         <core-pubnub-publish id="pub" channel="todo" message="Test"> </core-pubnub-publish>
         <core-pubnub-subscribe id="sub" channel="todo" messages="{{messages}}" presence="{{present}}" on-callback="subscribeCallback"></core-pubnub-subscribe>  
     </core-pubnub>
+   
   </template>
-</dom-module>
+
+
+
 <script>
   Polymer({
     is: "todo-app",
@@ -74,6 +86,9 @@
       }
     },
     postTask: function(e) {  // Add a new task
+      console.log("this", this);
+      console.log("this.$", this.$);
+      console.log("this.$.tTask", this.$.tTask.value);
       var tsk = this.$.tTask.value;
       var usr = this.$.tUser.value;
       if (tsk==""){
@@ -130,3 +145,4 @@
       }
   }
 </script>
+</dom-module>
