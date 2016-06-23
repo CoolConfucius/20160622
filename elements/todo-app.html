@@ -19,22 +19,28 @@
   <template>
     <paper-drawer-panel>
       <paper-header-panel>
-        paper-item
+        <paper-toolbar>
+          <paper-item>Completed Tasks</paper-item>
+        </paper-toolbar>
+        
+        <paper-menu class="list">
+          <template is="dom-if" if="{{!done.length}}">
+            <paper-material>
+              <paper-item>Completed tasks will appear here!</paper-item>
+            </paper-material>
+           </template> 
+          <template id="done" is="dom-repeat" items="{{done}}">
+            <paper-item>{{item.task}}<i style="margin-left: 5px;">{{item.user}}</i></paper-item>
+          </template>
+        </paper-menu>
+
+
+
       </paper-header-panel>
     </paper-drawer-panel>  
 
 
 
-    <paper-menu class="list">
-      <template is="dom-if" if="{{!done.length}}">
-        <paper-material>
-          <paper-item>Completed tasks will appear here!</paper-item>
-        </paper-material>
-       </template> 
-      <template id="done" is="dom-repeat" items="{{done}}">
-        <paper-item>{{item.task}}<i style="margin-left: 5px;">{{item.user}}</i></paper-item>
-      </template>
-    </paper-menu>
     <div style="border-left: 1px solid #ccc;">
     <!-- To create a new Todo -->
       <paper-material id="todoEntry" elevation="2">
