@@ -11,20 +11,20 @@
 </head>
 
 <dom-module id="todo-element">
-<style>
-/* CSS rules for your element */
-</style>
-<template>
-  <paper-material class="todo" elevation="1">
-  <paper-checkbox checked="{{completed}}"></paper-checkbox>
-  <paper-fab hidden={{editing}}  icon="icons:create" on-tap="doEdit" mini></paper-fab>
-  <paper-fab hidden={{!editing}} icon="icons:done"   on-tap="doEdit" mini></paper-fab>
-  <paper-item hidden="{{editing}}" id="task">{{task}}</paper-item>
-  <paper-input id="edit" hidden="{{!editing}}" value="{{task}}"></paper-input>
-  <paper-item>Created by: <span>{{user}}</span></paper-item>
-  <paper-item>{{time}}</paper-item>
-</paper-material> <!-- data bindings in local DOM -->
-</template>
+  <style>
+  /* CSS rules for your element */
+  </style>
+  <template>
+    <paper-material class="todo" elevation="1">
+      <paper-checkbox checked="{{completed}}"></paper-checkbox>
+      <paper-fab hidden={{editing}}  icon="icons:create" on-tap="doEdit" mini></paper-fab>
+      <paper-fab hidden={{!editing}} icon="icons:done"   on-tap="doEdit" mini></paper-fab>
+      <paper-item hidden="{{editing}}" id="task">{{task}}</paper-item>
+      <paper-input id="edit" hidden="{{!editing}}" value="{{task}}"></paper-input>
+      <paper-item>Created by: <span>{{user}}</span></paper-item>
+      <paper-item>{{time}}</paper-item>
+    </paper-material> <!-- data bindings in local DOM -->
+  </template>
 </dom-module>
 <script>
 Polymer({
@@ -63,5 +63,8 @@ Polymer({
       doEdit: function(e){
         this.editing=!this.editing;
       },
+      ready: function(e){
+        
+      }
     });
 </script>
