@@ -37,28 +37,35 @@
 
 
       </paper-header-panel>
+      <paper-header-panel>
+        <paper-toolbar>
+          
+        </paper-toolbar>
+        <div style="border-left: 1px solid #ccc;">
+        <!-- To create a new Todo -->
+          <paper-material id="todoEntry" elevation="2">
+            <paper-input id="tTask" label="Task"></paper-input>
+            <paper-input id="tUser" char-counter label="Username" maxlength="16"></paper-input> 
+            <paper-fab icon="icons:add" on-tap="postTask"></paper-fab>
+          </paper-material>
+          <div id="todos">
+            <template is="dom-if" if="{{!todo.length}}">
+              <paper-material>
+                <paper-item>No Tasks remain. Updates are Real-Time so stay tuned!</paper-item>
+              </paper-material>
+            </template>
+            <template id="tasks" is="dom-repeat" items="{{todo}}">
+              <todo-element user="{{item.user}}" task="{{item.task}}" rid="{{item.rid}}"></todo-element>
+            </template>
+          </div>
+        </div>  
+      </paper-header-panel>
+
+
     </paper-drawer-panel>  
 
 
 
-    <div style="border-left: 1px solid #ccc;">
-    <!-- To create a new Todo -->
-      <paper-material id="todoEntry" elevation="2">
-        <paper-input id="tTask" label="Task"></paper-input>
-        <paper-input id="tUser" char-counter label="Username" maxlength="16"></paper-input> 
-        <paper-fab icon="icons:add" on-tap="postTask"></paper-fab>
-      </paper-material>
-      <div id="todos">
-        <template is="dom-if" if="{{!todo.length}}">
-          <paper-material>
-            <paper-item>No Tasks remain. Updates are Real-Time so stay tuned!</paper-item>
-          </paper-material>
-        </template>
-        <template id="tasks" is="dom-repeat" items="{{todo}}">
-          <todo-element user="{{item.user}}" task="{{item.task}}" rid="{{item.rid}}"></todo-element>
-        </template>
-      </div>
-    </div>  
     <core-pubnub 
         publish_key="pub-c-28c6b849-a634-4bb8-9be9-f9d5d5bbb942" 
         subscribe_key="sub-c-c49bf3ae-38b4-11e6-92e6-0619f8945a4f">
