@@ -75,6 +75,7 @@
    
   </template>
 
+</dom-module>
 
 
 <script>
@@ -98,6 +99,15 @@
         value: []
       }
     },
+    handleComplete: function(e){
+      var idx = findWithAttr(this.todo, 'rid', e.target.rid);
+      var itm = this.todo[idx];
+      itm.task = e.target.task;       //Task of the fired event
+      itm.user = this.$.tUser.value; //User who completed task
+      itm.type = "done";              //Change to completed
+      this.$.pub.message = itm;
+      this.$.pub.publish();
+    },
     postTask: function(e) {  // Add a new task
       console.log("this", this);
       console.log("this.$", this.$);
@@ -113,15 +123,6 @@
       }
       this.$.tTask.value = "";
       this.$.pub.message = { type:"todo", task:tsk, user:usr, rid:randID() };
-      this.$.pub.publish();
-    },
-    handleComplete: function(e){
-      var idx = findWithAttr(this.todo, 'rid', e.target.rid);
-      var itm = this.todo[idx];
-      itm.task = e.target.task;       //Task of the fired event
-      itm.user = this.$.tUser.value; //User who completed task
-      itm.type = "done";              //Change to completed
-      this.$.pub.message = itm;
       this.$.pub.publish();
     },
     ready: function(e){
@@ -158,4 +159,3 @@
       }
   }
 </script>
-</dom-module>
