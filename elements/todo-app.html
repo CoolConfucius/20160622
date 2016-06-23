@@ -32,7 +32,7 @@
               <paper-material>
                 <paper-item>Completed tasks will appear here!</paper-item>
               </paper-material>
-             </template> 
+            </template> 
             <template id="done" is="dom-repeat" items="{{done}}">
               <paper-item>{{item.task}}<i style="margin-left: 5px;">{{item.user}}</i></paper-item>
             </template>
@@ -69,13 +69,13 @@
       </paper-drawer-panel>  
 
 
-
+<!-- 
       <core-pubnub 
           publish_key="pub-c-28c6b849-a634-4bb8-9be9-f9d5d5bbb942" 
           subscribe_key="sub-c-c49bf3ae-38b4-11e6-92e6-0619f8945a4f">
           <core-pubnub-publish id="pub" channel="todo" message="Test"> </core-pubnub-publish>
           <core-pubnub-subscribe id="sub" channel="todo" messages="{{messages}}" presence="{{present}}" on-callback="subscribeCallback"></core-pubnub-subscribe>  
-      </core-pubnub>
+      </core-pubnub> -->
      
     </template>
 
